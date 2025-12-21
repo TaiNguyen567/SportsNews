@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "980958642222",
+    "project_id": "sportsnews-6fc89",
+    "storage_bucket": "sportsnews-6fc89.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980958642222:android:33649035c305f65f745fbf",
+        "android_client_info": {
+          "package_name": "clc65.thanhtai.sportsnews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLvvPgJzI9nCH5j6GfSJk8VnUjKsC4FXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
