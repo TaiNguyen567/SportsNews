@@ -4,21 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen; // Import cái này
 
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 1. GỌI DÒNG NÀY ĐẦU TIÊN (Trước super.onCreate)
+        SplashScreen.installSplashScreen(this);
+
         super.onCreate(savedInstanceState);
+
+        // Vì dùng API mới, bạn có thể giữ layout hoặc để null cũng được
+        // setKeepOnScreenCondition giúp giữ logo lâu hơn nếu cần tải dữ liệu
         setContentView(R.layout.activity_splash);
 
-        // Delay 3 giây rồi chuyển sang màn hình Login
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // Đóng màn hình Splash để không back lại được
-            }
+        // Logic chuyển trang cũ của bạn
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }, 3000);
     }
 }

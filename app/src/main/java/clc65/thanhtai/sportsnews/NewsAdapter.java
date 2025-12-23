@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-    private ArrayList<Article> list;
     private Context context;
+    private ArrayList<Article> list;
 
     public NewsAdapter(Context context, ArrayList<Article> list) {
         this.context = context;
@@ -32,14 +32,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Article article = list.get(position);
         holder.tvTitle.setText(article.title);
-        holder.tvDate.setText(article.pubDate); // Sau này thay bằng hàm tính thời gian "x phút trước"
+        holder.tvDate.setText(article.pubDate);
 
         // Dùng Glide load ảnh
-        Glide.with(context).load(article.image).into(holder.imgThumb);
+        Glide.with(context).load(article.image).placeholder(R.drawable.ic_launcher_background).into(holder.imgThumb);
 
-        // Click vào bài báo
+        // Click vào bài báo -> Mở DetailActivity
         holder.itemView.setOnClickListener(v -> {
-            // Ở đây bạn sẽ code chuyển sang màn hình DetailActivity
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("LINK_NEWS", article.link);
+            context.startActivity(intent);
         });
     }
 

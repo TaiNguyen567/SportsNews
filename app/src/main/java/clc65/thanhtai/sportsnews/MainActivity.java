@@ -1,8 +1,11 @@
 package clc65.thanhtai.sportsnews;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +18,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    NewsAdapter adapter;
-    ArrayList<Article> articleList;
+    private RecyclerView recyclerView;
+    private NewsAdapter adapter;
+    private ArrayList<Article> articleList;
+    private ImageView btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,25 +29,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycler_view);
+        btnProfile = findViewById(R.id.btn_profile_main);
+
+        // Cấu hình RecyclerView
         articleList = new ArrayList<>();
         adapter = new NewsAdapter(this, articleList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Gọi hàm lấy tin tức RSS (VnExpress Thể Thao)
+        // Sự kiện click nút Profile (Nếu bạn chưa làm ProfileActivity thì comment dòng này lại)
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
+        // Bắt đầu tải tin tức từ VnExpress
         new FetchNewsTask().execute("https://vnexpress.net/rss/the-thao.rss");
     }
 
-    // Class con để chạy ngầm việc tải tin tức
+    // Class con chạy ngầm để lấy dữ liệu
     private class FetchNewsTask extends AsyncTask<String, Void, ArrayList<Article>> {
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
             String url = strings[0];
             ArrayList<Article> list = new ArrayList<>();
             try {
-                // Jsoup kết nối và lấy toàn bộ file RSS
                 Document doc = Jsoup.connect(url).get();
-                // Chọn các thẻ <item>
                 Elements items = doc.select("item");
 
                 for (Element item : items) {
@@ -51,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     String link = item.select("link").text();
                     String pubDate = item.select("pubDate").text();
 
-                    // Lấy ảnh từ thẻ description
+                    // Lấy ảnh từ trong thẻ description
                     String description = item.select("description").text();
                     Document descDoc = Jsoup.parse(description);
                     Element imgTag = descDoc.select("img").first();
@@ -67,11 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Article> articles) {
-            super.onPostExecute(articles);
-            // Cập nhật dữ liệu lên giao diện
-            articleList.clear();
-            articleList.addAll(articles);
-            adapter.notifyDataSetChanged();
+            if (articles.size() > 0) {
+                articleList.clear();
+                articleList.addAll(articles);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(MainActivity.this, "Lỗi tải tin tức!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

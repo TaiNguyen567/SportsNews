@@ -1,13 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SportsNews" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.SportNews" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
 
-    <style name="Theme.SportsNews" parent="Base.Theme.SportsNews" />
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
 
-    <style name="Theme.SportsNews.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowFullscreen">true</item> <item name="android:windowContentOverlay">@null</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_app</item>
+
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.SportNews</item>
     </style>
 </resources>

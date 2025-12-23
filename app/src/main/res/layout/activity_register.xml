@@ -11,19 +11,11 @@
     android:padding="24dp"
     android:gravity="center_vertical">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/logo_app"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:scaleType="fitCenter"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome Back!"
-        android:textSize="28sp"
+        android:text="Tạo tài khoản"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="#000000"
         android:layout_marginBottom="8dp"/>
@@ -31,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đăng nhập để tiếp tục"
+        android:text="Đăng ký để cập nhật tin tức thể thao mới nhất"
         android:textSize="16sp"
         android:textColor="#666666"
         android:layout_marginBottom="30dp"/>
@@ -48,15 +40,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Mật khẩu"
+        android:hint="Mật khẩu (Ít nhất 6 ký tự)"
         app:endIconMode="password_toggle"
         app:boxStrokeColor="#000000"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -66,48 +58,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:maxLines="1"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tv_forgot_pass"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Quên mật khẩu?"
-        android:layout_gravity="end"
-        android:layout_marginTop="12dp"
-        android:textColor="#666666"
+        android:layout_marginTop="16dp"
+        android:hint="Nhập lại mật khẩu"
+        app:endIconMode="password_toggle"
+        app:boxStrokeColor="#000000"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_confirm_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:maxLines="1"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:text="Đăng Ký Ngay"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:padding="8dp"/> <Button
-    android:id="@+id/btn_login"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:layout_marginTop="30dp"
-    android:text="Đăng Nhập"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:backgroundTint="#000000"
-    app:cornerRadius="8dp"/>
+        android:backgroundTint="#000000"
+        app:cornerRadius="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="24dp"
+        android:paddingBottom="20dp"> <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đã có tài khoản? "
+        android:textColor="#666666"/>
 
         <TextView
+            android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chưa có tài khoản? "
-            android:textColor="#666666"/>
-
-        <TextView
-            android:id="@+id/tv_register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đăng ký ngay"
+            android:text="Đăng nhập"
             android:textStyle="bold"
             android:textColor="#FF0000"
             android:padding="12dp"/> </LinearLayout>
