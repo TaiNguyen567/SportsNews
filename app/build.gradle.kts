@@ -5,14 +5,12 @@ plugins {
 
 android {
     namespace = "clc65.thanhtai.sportsnews"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 34 // Giữ nguyên mức ổn định Android 14
 
     defaultConfig {
         applicationId = "clc65.thanhtai.sportsnews"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -29,22 +27,43 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    // 1. Giao diện cơ bản (Android Standard UI)
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // --- QUAN TRỌNG: Đã sửa dòng này để fix lỗi SDK 36 ---
+    // Thay vì dùng libs.activity (bản mới gây lỗi), ta dùng bản 1.9.3 ổn định
+    implementation("androidx.activity:activity:1.9.3")
+
+    // Đảm bảo Core KTX dùng bản phù hợp với SDK 34
+    implementation("androidx.core:core-ktx:1.13.1")
+    // -----------------------------------------------------
+
+    // 2. Màn hình chờ (Splash Screen)
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // 3. Thư viện đọc báo (Jsoup) & Load ảnh (Glide)
+    implementation("org.jsoup:jsoup:1.15.3")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("org.jsoup:jsoup:1.17.2")
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.auth)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+
+    // 4. Firebase (Xác thực)
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-auth")
+
+    // 5. Thư viện Gson (Để lưu danh sách Yêu thích)
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Thư viện kiểm thử
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

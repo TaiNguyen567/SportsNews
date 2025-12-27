@@ -4,25 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.splashscreen.SplashScreen; // Import cái này
+import androidx.core.splashscreen.SplashScreen;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 1. GỌI DÒNG NÀY ĐẦU TIÊN (Trước super.onCreate)
         SplashScreen.installSplashScreen(this);
-
         super.onCreate(savedInstanceState);
-
-        // Vì dùng API mới, bạn có thể giữ layout hoặc để null cũng được
-        // setKeepOnScreenCondition giúp giữ logo lâu hơn nếu cần tải dữ liệu
         setContentView(R.layout.activity_splash);
 
-        // Logic chuyển trang cũ của bạn
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-            startActivity(intent);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
             finish();
-        }, 3000);
+        }, 2000);
     }
 }
