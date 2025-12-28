@@ -10,14 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide; // Cần thư viện Glide trong build.gradle
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private Context context;
     private ArrayList<News> listNews;
-    private boolean isFavoriteScreen; // Biến này để biết đang ở màn hình nào
+    private boolean isFavoriteScreen;
 
     public NewsAdapter(Context context, ArrayList<News> listNews, boolean isFavoriteScreen) {
         this.context = context;
@@ -38,35 +38,31 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.tvTitle.setText(news.getTitle());
         holder.tvDate.setText(news.getDate());
 
-        // Load ảnh bằng Glide
         Glide.with(context).load(news.getImage()).into(holder.imgThumb);
 
-        // Xử lý nút tim (Lưu/Xóa yêu thích)
         if (isFavoriteScreen) {
-            holder.imgFav.setImageResource(android.R.drawable.ic_menu_delete); // Icon thùng rác
+            holder.imgFav.setImageResource(android.R.drawable.ic_menu_delete);
         } else {
-            holder.imgFav.setImageResource(android.R.drawable.btn_star_big_off); // Icon sao rỗng
+            holder.imgFav.setImageResource(android.R.drawable.btn_star_big_off);
         }
 
         holder.imgFav.setOnClickListener(v -> {
             if (isFavoriteScreen) {
-                // Xóa khỏi yêu thích
                 FavoritesManager.removeFavorite(context, news);
                 listNews.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, listNews.size());
                 Toast.makeText(context, "Đã xóa tin!", Toast.LENGTH_SHORT).show();
             } else {
-                // Thêm vào yêu thích
                 FavoritesManager.addFavorite(context, news);
                 Toast.makeText(context, "Đã lưu tin!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Bấm vào bài báo -> Mở chi tiết
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("LINK", news.getLink()); // Key "LINK" quan trọng
+            intent.putExtra("LINK", news.getLink());
+            intent.putExtra("IMAGE", news.getImage());
             context.startActivity(intent);
         });
     }
@@ -85,7 +81,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvDate = itemView.findViewById(R.id.tv_date);
             imgThumb = itemView.findViewById(R.id.img_thumb);
-            imgFav = itemView.findViewById(R.id.img_fav); // Đảm bảo trong item_news.xml có id này
+            imgFav = itemView.findViewById(R.id.img_fav);
         }
     }
 }

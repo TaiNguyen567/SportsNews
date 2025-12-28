@@ -21,7 +21,6 @@ public class News implements Serializable {
     public String getImage() { return image; }
     public String getDate() { return date; }
 
-    // Hàm này giúp so sánh để không lưu trùng tin yêu thích
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

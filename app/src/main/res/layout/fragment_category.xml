@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="⚽ Bóng đá"
+                android:text="Bóng đá"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#1565C0"/>
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="🎾 Tennis"
+                android:text="Tennis"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#EF6C00"/>
@@ -74,14 +74,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="🏎️ Đua xe"
+                android:text="Đua xe"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#C62828"/>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_hautruong"
+            android:id="@+id/card_bongro"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_columnWeight="1"
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="📰 Hậu trường"
+                android:text="Bóng rổ"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#2E7D32"/>

@@ -2,16 +2,25 @@ package clc65.thanhtai.sportsnews;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    private TextInputEditText edtNewPass, edtConfirmPass;
+    // Thêm biến edtOldPass để nhập mật khẩu cũ
+    private TextInputEditText edtOldPass, edtNewPass, edtConfirmPass;
     private Button btnSave;
 
     @Override
@@ -19,19 +28,27 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
+        // Ánh xạ (Nhớ thêm ID edt_old_pass vào file XML của bạn)
+        edtOldPass = findViewById(R.id.edt_old_pass);
         edtNewPass = findViewById(R.id.edt_new_pass);
         edtConfirmPass = findViewById(R.id.edt_confirm_new_pass);
         btnSave = findViewById(R.id.btn_save_pass);
 
-        // Nút quay lại (nếu bạn muốn dùng nút back cứng của điện thoại thì không cần dòng này)
         findViewById(R.id.btn_back_change_pass).setOnClickListener(v -> finish());
 
         btnSave.setOnClickListener(v -> changePassword());
     }
 
     private void changePassword() {
+        String oldPass = edtOldPass.getText().toString().trim(); // Lấy pass cũ
         String newPass = edtNewPass.getText().toString().trim();
         String confirmPass = edtConfirmPass.getText().toString().trim();
+
+        // 1. Kiểm tra dữ liệu đầu vào
+        if (TextUtils.isEmpty(oldPass)) {
+            edtOldPass.setError("Vui lòng nhập mật khẩu hiện tại");
+            return;
+        }
 
         if (TextUtils.isEmpty(newPass)) {
             edtNewPass.setError("Vui lòng nhập mật khẩu mới");
@@ -48,19 +65,42 @@ public class ChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
+        // 2. Lấy User hiện tại
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            user.updatePassword(newPass)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(ChangePasswordActivity.this, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
-                            finish(); // Đóng màn hình này
-                        } else {
-                            Toast.makeText(ChangePasswordActivity.this, "Lỗi: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+
+        if (user != null && user.getEmail() != null) {
+            // Hiển thị thông báo chờ (nếu cần)
+            Toast.makeText(this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+
+            // 3. Tạo chứng thực từ Email và Mật khẩu cũ
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
+
+            // 4. Tái xác thực (Re-authenticate) để khắc phục lỗi "Sensitive operation"
+            user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // --- Nếu mật khẩu cũ đúng -> Tiến hành đổi mật khẩu mới ---
+                        user.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ChangePasswordActivity.this, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(ChangePasswordActivity.this, "Lỗi cập nhật: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        // --- Nếu mật khẩu cũ sai ---
+                        edtOldPass.setError("Mật khẩu hiện tại không đúng");
+                        Toast.makeText(ChangePasswordActivity.this, "Xác thực thất bại. Vui lòng kiểm tra mật khẩu cũ.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } else {
-            Toast.makeText(this, "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi người dùng, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
         }
     }
 }

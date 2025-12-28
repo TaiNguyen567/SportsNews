@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
 
-        // Mặc định load màn hình Home
         loadFragment(new HomeFragment());
 
         bottomNav.setOnItemSelectedListener(item -> {

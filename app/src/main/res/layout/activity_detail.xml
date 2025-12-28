@@ -1,57 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
     <LinearLayout
-        android:id="@+id/layout_header"
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_alignParentTop="true"
         android:background="#B71C1C"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:elevation="4dp">
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
 
         <ImageView
-            android:id="@+id/btn_back_detail"
+            android:id="@+id/img_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@android:drawable/ic_menu_revert"
             android:padding="5dp"
-            android:background="?attr/selectableItemBackground"
             app:tint="#FFFFFF"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="Nội dung bài viết"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFF"
-        app:menu="@menu/menu_detail"
-        app:itemIconTint="#B71C1C"
-        app:itemTextColor="#B71C1C"
-        app:labelVisibilityMode="labeled"
-        app:elevation="8dp"/>
-
-    <WebView
-        android:id="@+id/webview_content"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout_header"
-        android:layout_above="@id/bottom_nav_detail"
-        android:scrollbars="vertical"/>
+        android:layout_below="@id/header_layout"
+        android:layout_above="@id/bottom_bar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tiêu đề bài báo"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_detail_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ngày đăng"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"/>
+
+            <ImageView
+                android:id="@+id/img_detail_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_launcher_background"
+                android:layout_marginBottom="16dp"/>
+
+            <WebView
+                android:id="@+id/wv_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                tools:ignore="WebViewLayout" />
+
+            <TextView
+                android:id="@+id/tv_detail_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xem chi tiết tại VnExpress"
+                android:textColor="#0000EE"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-medium"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FAFAFA"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/btn_back_bottom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_revert"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quay lại" android:textSize="12sp" android:textColor="#B71C1C"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_save_news"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/btn_star_big_off"
+                app:tint="#B71C1C"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lưu tin" android:textSize="12sp" android:textColor="#B71C1C"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_share_news"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_share"
+                app:tint="#B71C1C"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chia sẻ" android:textSize="12sp" android:textColor="#B71C1C"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

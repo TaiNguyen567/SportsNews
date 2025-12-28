@@ -29,14 +29,12 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         listFavorite = new ArrayList<>();
-        // Tái sử dụng NewsAdapter bạn đã có
         adapter = new NewsAdapter(getContext(), listFavorite, false);
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-    // Hàm này chạy mỗi khi màn hình hiện lại -> Giúp cập nhật danh sách mới nhất
     @Override
     public void onResume() {
         super.onResume();
@@ -45,7 +43,6 @@ public class FavoriteFragment extends Fragment {
 
     private void loadFavorites() {
         listFavorite.clear();
-        // Lấy dữ liệu từ FavoritesManager
         ArrayList<News> savedList = FavoritesManager.getFavorites(getContext());
 
         if (savedList != null) {

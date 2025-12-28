@@ -40,8 +40,6 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    // --- QUAN TRỌNG: Đã sửa dòng này để fix lỗi SDK 36 ---
-    // Thay vì dùng libs.activity (bản mới gây lỗi), ta dùng bản 1.9.3 ổn định
     implementation("androidx.activity:activity:1.9.3")
 
     // Đảm bảo Core KTX dùng bản phù hợp với SDK 34
