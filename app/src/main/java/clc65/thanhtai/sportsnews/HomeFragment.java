@@ -118,7 +118,6 @@ public class HomeFragment extends Fragment {
                                     }
                                 }
                             }
-                            // -----------------------------------------
                         } catch (Exception e) {
                         }
 

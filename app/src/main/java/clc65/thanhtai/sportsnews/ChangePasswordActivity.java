@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    // Thêm biến edtOldPass để nhập mật khẩu cũ
     private TextInputEditText edtOldPass, edtNewPass, edtConfirmPass;
     private Button btnSave;
 
@@ -28,7 +27,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
-        // Ánh xạ (Nhớ thêm ID edt_old_pass vào file XML của bạn)
         edtOldPass = findViewById(R.id.edt_old_pass);
         edtNewPass = findViewById(R.id.edt_new_pass);
         edtConfirmPass = findViewById(R.id.edt_confirm_new_pass);
@@ -44,7 +42,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String newPass = edtNewPass.getText().toString().trim();
         String confirmPass = edtConfirmPass.getText().toString().trim();
 
-        // 1. Kiểm tra dữ liệu đầu vào
         if (TextUtils.isEmpty(oldPass)) {
             edtOldPass.setError("Vui lòng nhập mật khẩu hiện tại");
             return;
@@ -65,22 +62,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
-        // 2. Lấy User hiện tại
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null && user.getEmail() != null) {
-            // Hiển thị thông báo chờ (nếu cần)
             Toast.makeText(this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
 
-            // 3. Tạo chứng thực từ Email và Mật khẩu cũ
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
 
-            // 4. Tái xác thực (Re-authenticate) để khắc phục lỗi "Sensitive operation"
             user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        // --- Nếu mật khẩu cũ đúng -> Tiến hành đổi mật khẩu mới ---
                         user.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -93,7 +85,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        // --- Nếu mật khẩu cũ sai ---
                         edtOldPass.setError("Mật khẩu hiện tại không đúng");
                         Toast.makeText(ChangePasswordActivity.this, "Xác thực thất bại. Vui lòng kiểm tra mật khẩu cũ.", Toast.LENGTH_SHORT).show();
                     }

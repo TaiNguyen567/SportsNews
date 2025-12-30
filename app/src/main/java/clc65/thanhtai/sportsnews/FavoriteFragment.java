@@ -12,24 +12,31 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+// THÊM IMPORT FIREBASE
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 public class FavoriteFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
-    private ArrayList<News> listFavorite;
+    private ArrayList<News> listNews;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Gắn layout cho fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
 
-        recyclerView = view.findViewById(R.id.recycler_view_favorites);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView = view.findViewById(R.id.recycler_view_favorite);
 
-        listFavorite = new ArrayList<>();
-        adapter = new NewsAdapter(getContext(), listFavorite, false);
+        listNews = new ArrayList<>();
+
+        adapter = new NewsAdapter(requireContext(), listNews, true);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -38,21 +45,27 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadFavorites();
+        loadFavoriteData();
     }
 
-    private void loadFavorites() {
-        listFavorite.clear();
-        ArrayList<News> savedList = FavoritesManager.getFavorites(getContext());
+    private void loadFavoriteData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (savedList != null) {
-            listFavorite.addAll(savedList);
-        }
+        if (user != null) {
+            String userEmail = user.getEmail();
 
-        adapter.notifyDataSetChanged();
+            FavoritesManager db = new FavoritesManager(requireContext());
 
-        if (listFavorite.isEmpty()) {
-            Toast.makeText(getContext(), "Chưa có tin nào được lưu", Toast.LENGTH_SHORT).show();
+            listNews.clear();
+
+            listNews.addAll(db.getFavoritesByEmail(userEmail));
+
+            adapter.notifyDataSetChanged();
+        } else {
+            listNews.clear();
+            adapter.notifyDataSetChanged();
+
+            Toast.makeText(requireContext(), "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
 }

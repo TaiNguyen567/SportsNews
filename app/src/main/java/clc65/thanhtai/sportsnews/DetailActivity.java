@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -162,22 +164,37 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void saveArticle() {
-        if (currentTitle.isEmpty()) {
-            Toast.makeText(this, "Đang tải bài viết, vui lòng chờ...", Toast.LENGTH_SHORT).show();
+        // 1. Kiểm tra đăng nhập
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để lưu tin!", Toast.LENGTH_SHORT).show();
             return;
         }
+        String userEmail = user.getEmail(); // Lấy email người dùng hiện tại
 
-        // --- KIỂM TRA LẠI ẢNH TRƯỚC KHI LƯU ---
-        // Đảm bảo không bao giờ lưu ảnh rỗng
-        if (currentImage == null || currentImage.isEmpty()) {
-            currentImage = "https://s1.vnecdn.net/vnexpress/restruct/i/v95/logo_default.jpg";
+        // 2. Kiểm tra dữ liệu bài báo
+        if (currentTitle.isEmpty()) return;
+        if (currentImage.isEmpty()) currentImage = "https://s1.vnecdn.net/vnexpress/restruct/i/v95/logo_default.jpg";
+
+        // 3. Khởi tạo Manager
+        FavoritesManager db = new FavoritesManager(this);
+
+        // 4. Kiểm tra xem đã lưu chưa (theo email này)
+        if (!db.isFavorite(currentUrl, userEmail)) {
+            News newsToSave = new News(currentTitle, currentUrl, currentImage, "Đã lưu");
+
+            // GỌI HÀM CÓ TRUYỀN EMAIL
+            db.addFavorite(newsToSave, userEmail);
+
+            Toast.makeText(this, "Đã lưu vào mục Yêu thích!", Toast.LENGTH_SHORT).show();
+            // (Optional) Đổi icon nút sang trạng thái đã lưu
+            // btnSaveIcon.setImageResource(R.drawable.ic_star_filled);
+        } else {
+            // Nếu muốn bấm lần nữa thì bỏ lưu
+            db.removeFavorite(currentUrl, userEmail);
+            Toast.makeText(this, "Đã bỏ lưu bài viết", Toast.LENGTH_SHORT).show();
+            // (Optional) Đổi icon về trạng thái chưa lưu
         }
-
-        // Tạo object News với currentImage (đã được đảm bảo có dữ liệu)
-        News newsToSave = new News(currentTitle, currentUrl, currentImage, "Đã lưu");
-
-        FavoritesManager.addFavorite(this, newsToSave);
-        Toast.makeText(this, "Đã lưu vào mục Yêu thích!", Toast.LENGTH_SHORT).show();
     }
 
     private void shareArticle() {
