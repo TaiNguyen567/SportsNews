@@ -8,9 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
@@ -47,22 +52,39 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         }
 
         holder.imgFav.setOnClickListener(v -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null) {
+                Toast.makeText(context, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String email = user.getEmail();
+
+            FavoritesManager db = new FavoritesManager(context);
+
             if (isFavoriteScreen) {
-                FavoritesManager.removeFavorite(context, news);
+                db.removeFavorite(news.getLink(), email);
+
                 listNews.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, listNews.size());
+
                 Toast.makeText(context, "Đã xóa tin!", Toast.LENGTH_SHORT).show();
             } else {
-                FavoritesManager.addFavorite(context, news);
-                Toast.makeText(context, "Đã lưu tin!", Toast.LENGTH_SHORT).show();
+                if (!db.isFavorite(news.getLink(), email)) {
+                    db.addFavorite(news, email);
+                    Toast.makeText(context, "Đã lưu tin!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Tin này đã có trong mục yêu thích", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("TITLE", news.getTitle());
             intent.putExtra("LINK", news.getLink());
             intent.putExtra("IMAGE", news.getImage());
+            intent.putExtra("DATE", news.getDate());
             context.startActivity(intent);
         });
     }
